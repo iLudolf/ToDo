@@ -1,6 +1,19 @@
 import { Header } from "../../components/Header"
-import { Body, Container, InputSearch, ButtonSearch, GroupSearch } from "./styles"
-import {Plus, PlusCircle} from "phosphor-react"
+import {
+    Body,
+    Container,
+    InputSearch,
+    ButtonSearch,
+    GroupSearch,
+    TaskContainer,
+    TaskHeader,
+    AmountTaskCreate,
+    AmountTaskCompleted,
+    Amount
+} from "./styles"
+import { Plus } from "phosphor-react"
+import { Empty } from "../../components/Empty"
+import { Task } from "../../components/Task"
 
 export const Home = () => {
     return (
@@ -8,13 +21,30 @@ export const Home = () => {
             <Header />
             <Body>
                 <GroupSearch>
-                    <InputSearch 
+                    <InputSearch
                         placeholder="Adicione uma nova tarefa"
                     />
-                    <ButtonSearch >Criar 
-                       {" "} <Plus size={15} color="#ffff"/>
+                    <ButtonSearch >Criar
+                        {" "} <img src="./assets/plus.png" alt="" />
                     </ButtonSearch>
                 </GroupSearch>
+                <TaskContainer>
+                    <TaskHeader>
+                        <AmountTaskCreate>
+                            Tarefas criadas {' '}
+                            <Amount>0</Amount>
+                        </AmountTaskCreate>
+                        <AmountTaskCompleted>
+                            Concluídas {' '}
+                            <Amount>0</Amount>
+                        </AmountTaskCompleted>
+                    </TaskHeader>
+                    {/* <Empty /> */}
+                </TaskContainer>
+                
+                <Task />
+                <Task />
+                <Task />
             </Body>
         </Container>
     )
