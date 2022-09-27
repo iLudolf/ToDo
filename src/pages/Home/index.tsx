@@ -11,11 +11,20 @@ import {
     AmountTaskCompleted,
     Amount
 } from "./styles"
-import { Plus } from "phosphor-react"
 import { Empty } from "../../components/Empty"
 import { Task } from "../../components/Task"
+import { useContext, useState } from "react"
+import { TasksContext } from "../../contexts/TasksContext"
 
 export const Home = () => {
+    const { tasks, addTask } = useContext(TasksContext)
+
+    const [newTaskDescription, setNewTaskDescription] = useState<string>('')
+
+    const handleAddNewTask = () => {
+        addTask(newTaskDescription)
+    }
+
     return (
         <Container>
             <Header />
@@ -23,8 +32,9 @@ export const Home = () => {
                 <GroupSearch>
                     <InputSearch
                         placeholder="Adicione uma nova tarefa"
+                        onChange={(e) => setNewTaskDescription(e.target.value)}
                     />
-                    <ButtonSearch >Criar
+                    <ButtonSearch onClick={handleAddNewTask}>Criar
                         {" "} <img src="./assets/plus.png" alt="" />
                     </ButtonSearch>
                 </GroupSearch>
@@ -32,19 +42,23 @@ export const Home = () => {
                     <TaskHeader>
                         <AmountTaskCreate>
                             Tarefas criadas {' '}
-                            <Amount>0</Amount>
+                            <Amount>{tasks.length}</Amount>
                         </AmountTaskCreate>
                         <AmountTaskCompleted>
                             Concluídas {' '}
-                            <Amount>0</Amount>
+                            <Amount>{tasks.filter(task => task.concluded === true).length}</Amount>
                         </AmountTaskCompleted>
                     </TaskHeader>
-                    {/* <Empty /> */}
                 </TaskContainer>
-                
-                <Task />
-                <Task />
-                <Task />
+                <>
+                    {tasks.length <= 0 ? <Empty /> : tasks.map((element) => {
+                        return <Task
+                            key={element.id}
+                            id={element.id}
+                            description={element.description}
+                        />
+                    })}
+                </>
             </Body>
         </Container>
     )

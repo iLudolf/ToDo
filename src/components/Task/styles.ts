@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Container = styled.nav`
+interface isSelect {
+    taskIsSelect: boolean;
+}
+
+export const Container = styled.nav<isSelect>`
 border: 1px solid transparent;
 padding: 16px;
 display: flex;
@@ -13,10 +17,14 @@ border-radius: 8px;
 color:  ${({ theme }) => theme.gray300};
 margin-bottom: 16px;
 
+
 span{
+    width: 100%;
     margin: 0;
     padding: 0;
     text-align: start;
+    font-size: 16px;
+    ${({taskIsSelect}) => taskIsSelect && css`text-decoration: Line-through`}
 }
 
 input{
@@ -32,13 +40,6 @@ input {
 
 :hover{
     border: 1px solid  ${({ theme }) => theme.blue};
-}
-
-[type=checkbox]{
-    width: 24px;
-    height: 24px;
-    border-radius: 999999px;
-    background-color: red;
 }
 
 `

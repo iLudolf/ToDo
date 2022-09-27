@@ -1,14 +1,37 @@
+import { useContext, useState } from "react";
+import { TasksContext } from "../../contexts/TasksContext";
 import {
     Container,
     Logo
 } from "./styles"
 
-export const Task = () => {
+interface IProps {
+    id: string;
+    description: string;
+}
+
+export const Task = ({ description, id }: IProps) => {
+    const { deleteTask, setConcludedTask } = useContext(TasksContext);
+    const [taskIsConcluded, setTaskIsConcluded] = useState<boolean>(false)
+
+    const handleRemoveTask = () => {
+        deleteTask(id)
+    }
+
+    const handleConcludedTask = () => {
+        setTaskIsConcluded(!taskIsConcluded)
+        setConcludedTask(id)
+    }
+
     return (
-        <Container>
-            <input type="checkbox"></input>
-            <span>Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer..</span>
-            <Logo src="./assets/trash.png" />   
+        <Container
+            taskIsSelect={taskIsConcluded}
+        >
+            <input type="checkbox" onChange={handleConcludedTask}></input>
+            <span>{description}</span>
+            <a href="#" onClick={handleRemoveTask}>
+                <Logo src="./assets/trash.png" />
+            </a>
         </Container>
     )
 }

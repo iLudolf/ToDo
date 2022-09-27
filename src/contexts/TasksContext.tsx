@@ -1,5 +1,5 @@
-import { createContext, ReactNode } from 'react'
-
+import { createContext, ReactNode, useState } from 'react'
+import * as uuid from "uuid"
 interface signInCredentials {
   email: string
   password: string
@@ -8,30 +8,53 @@ interface signInCredentials {
 interface AuthProviderProps {
   children: ReactNode
 }
+interface ITask {
+  id: string;
+  description: string;
+  concluded: boolean;
+}
 
-type AuthContextData = {
-  signIn({ email, password }: signInCredentials): Promise<void>
-  isAuthenticated: boolean
-  logout: () => void
+type TasksContextData = {
+  addTask(description: string): Promise<void>
+  tasks: ITask[];
+  deleteTask(id: string): void;
+  setConcludedTask(id: string): void;
 }
 
 
-export const AuthContext = createContext({} as AuthContextData)
+export const TasksContext = createContext({} as TasksContextData)
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const isAuthenticated = !!localStorage.getItem('STOREGE_KEY')
+export function TasksProvider({ children }: AuthProviderProps) {
 
-  const signIn = async ({ email, password }: signInCredentials) => {
+  const [tasks, setTasks] = useState<ITask[]>([])
 
-   
+  const addTask = async (description: string) => {
+    setTasks([{
+      id: uuid.v4(),
+      description: description,
+      concluded: false,
+    }, ...tasks])
   }
 
-  const logout = () => {
+  const deleteTask = (id: string) => {
+    setTasks(tasks.filter(task => task.id !== id))
   }
+
+  const setConcludedTask = (id: string) => {
+    let arryAux: ITask[] = []
+    tasks.map((element) => {
+      if (element.id === id) {
+        element.concluded = (!element.concluded)
+      }
+      arryAux.push(element)
+    })
+    setTasks(arryAux)
+  }
+
 
   return (
-    <AuthContext.Provider value={{ signIn, isAuthenticated, logout }}>
+    <TasksContext.Provider value={{ addTask, tasks, deleteTask, setConcludedTask }}>
       {children}
-    </AuthContext.Provider>
+    </TasksContext.Provider>
   )
 }
